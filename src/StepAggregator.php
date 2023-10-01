@@ -121,7 +121,7 @@ class StepAggregator implements Workflow, LoggerAwareInterface
                 if (false === $pipeline($item)) {
                     continue;
                 }
-            } catch(Exception $e) {
+            } catch(\Exception $e) {
                 if (!$this->skipItemOnFailure) {
                     throw $e;
                 }
