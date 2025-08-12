@@ -37,6 +37,9 @@ class ValidatorStep implements PriorityStep
      */
     private $validator;
 
+    private ?Constraints\Collection $compiledConstraints = null;
+
+
     /**
      * @param ValidatorInterface $validator
      */
@@ -101,8 +104,11 @@ class ValidatorStep implements PriorityStep
         $this->line++;
 
         if (count($this->constraints) > 0) {
-            $constraints = new Constraints\Collection($this->constraints);
-            $list = $this->validator->validate($item, $constraints);
+            if ($this->compiledConstraints === null) {
+                $this->compiledConstraints = new Constraints\Collection($this->constraints);
+            }
+
+            $list = $this->validator->validate($item, $this->compiledConstraints);
         } else {
             $list = $this->validator->validate($item);
         }
