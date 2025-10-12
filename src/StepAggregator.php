@@ -53,7 +53,7 @@ class StepAggregator implements Workflow, LoggerAwareInterface
      * @param Reader $reader
      * @param string $name
      */
-    public function __construct(Reader $reader, $name = null)
+    public function __construct(Reader $reader, $name = null, private bool $isArray = true)
     {
         $this->name = $name;
         $this->reader = $reader;
@@ -191,7 +191,7 @@ class StepAggregator implements Workflow, LoggerAwareInterface
     {
         $steps = $this->steps;
         // Use illogically large and small priorities
-        $steps[-255][] = new Step\ArrayCheckStep;
+        if($this->isArray) $steps[-255][] = new Step\ArrayCheckStep;
         foreach ($this->writers as $writer) {
             $steps[-256][] = new Step\WriterStep($writer);
         }
