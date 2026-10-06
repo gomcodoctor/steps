@@ -105,7 +105,12 @@ class ValidatorStep implements PriorityStep
 
         if (count($this->constraints) > 0) {
             if ($this->compiledConstraints === null) {
-                $this->compiledConstraints = new Constraints\Collection($this->constraints);
+                // Symfony 8 removed the options-array form of constraint constructors: Collection's first
+                // argument is now the field map itself, and other options are named arguments.
+                $options = $this->constraints;
+                $fields = $options['fields'] ?? [];
+                unset($options['fields']);
+                $this->compiledConstraints = new Constraints\Collection($fields, ...$options);
             }
 
             $list = $this->validator->validate($item, $this->compiledConstraints);
